@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: items
+server:
+  port: 8082
+
+
