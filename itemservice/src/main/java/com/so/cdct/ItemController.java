@@ -13,24 +13,24 @@ import java.util.List;
 @RestController
 public class ItemController {
 
-	private List<Item> availableItems;
+    private List<Item> availableItems;
 
-	{
-		availableItems = new ArrayList<>();
-		availableItems.add(new Item("A", 100));
-		availableItems.add(new Item("B", 200));
-		availableItems.add(new Item("C", 300));
-	}
+    {
+        availableItems = new ArrayList<>();
+        availableItems.add(new Item("A", 100));
+        availableItems.add(new Item("B", 200));
+        availableItems.add(new Item("C", 300));
+    }
 
-	@PostMapping(value = "/items")
-	public ResponseEntity<List<Item>> getAvailableItems() {
-		return new ResponseEntity(availableItems, HttpStatus.OK);
-	}
+    @GetMapping(value = "/items")
+    public ResponseEntity<List<Item>> getAvailableItems() {
+        return new ResponseEntity(availableItems, HttpStatus.OK);
+    }
 
-	@GetMapping(value = "/items/{code}")
-	public ResponseEntity<Item> getItem(@PathVariable String code) {
-		Item item = availableItems.stream().filter(it -> it.getCode().equals(code)).findFirst().orElse(Item.EMPTY);
-		HttpStatus status = item.canEqual(Item.EMPTY) ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-		return new ResponseEntity(item, status);
-	}
+    @GetMapping(value = "/items/{code}")
+    public ResponseEntity<Item> getItem(@PathVariable String code) {
+        Item item = availableItems.stream().filter(it -> it.getCode().equals(code)).findFirst().orElseGet(() -> Item.EMPTY);
+        HttpStatus status = item.equals(Item.EMPTY) ? HttpStatus.NOT_FOUND : HttpStatus.FOUND;
+        return new ResponseEntity(item, status);
+    }
 }
