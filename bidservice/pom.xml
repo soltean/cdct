@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+            <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
             <version>${spring-cloud-contract.version}</version>
             <scope>test</scope>
         </dependency>
@@ -58,16 +58,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-contract-maven-plugin</artifactId>
-                <version>${spring-cloud-contract.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <baseClassForTests>demo.UserServiceBase</baseClassForTests>
-                    <basePackageForTests>demo</basePackageForTests>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

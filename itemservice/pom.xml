@@ -64,8 +64,7 @@
                 <version>${spring-cloud-contract.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <baseClassForTests>demo.UserServiceBase</baseClassForTests>
-                    <basePackageForTests>demo</basePackageForTests>
+                    <basePackageForTests>com.so.cdct</basePackageForTests>
                 </configuration>
             </plugin>
             <plugin>
