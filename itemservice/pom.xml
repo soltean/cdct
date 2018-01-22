@@ -64,6 +64,7 @@
                 <version>${spring-cloud-contract.version}</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <baseClassForTests>com.so.cdct.ItemBaseTest</baseClassForTests>
                     <basePackageForTests>com.so.cdct</basePackageForTests>
                 </configuration>
             </plugin>
