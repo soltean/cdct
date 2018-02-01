@@ -23,7 +23,7 @@ public class ItemController {
 
     @GetMapping(value = "/items")
     public ResponseEntity<List<Item>> getAvailableItems() {
-        return new ResponseEntity(availableItems, HttpStatus.OK);
+        return new ResponseEntity(availableItems, HttpStatus.FOUND);
     }
 
     @GetMapping(value = "/items/{code}")

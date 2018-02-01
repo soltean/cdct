@@ -8,11 +8,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ItemController.class)
-public class ItemBaseTest {
+public abstract class ItemBaseTest {
 
 	@Before
 	public void before() {
-		RestAssuredMockMvc.standaloneSetup(ItemController.class);
+		RestAssuredMockMvc.standaloneSetup(new ItemController());
 	}
 
 }

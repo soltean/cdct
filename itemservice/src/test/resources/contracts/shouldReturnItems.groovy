@@ -9,7 +9,7 @@ org.springframework.cloud.contract.spec.Contract.make {
         }
     }
     response {
-        status 200
+        status 302
         body([
                 [
                     code    : value(producer(regex('[A-Za-z0-9]+'))),
