@@ -1,8 +1,7 @@
 package com.so.cdct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +20,7 @@ public class BidController {
 
     @PostMapping(value = "/bids")
     public ResponseEntity sendBidForProduct(@RequestBody Bid bid) {
-        ResponseEntity<ItemResponse> response = restTemplate.getForEntity("http://localhost:8082/items/" + bid.getItemCode(), ItemResponse.class);
+        ResponseEntity<ItemResponse> response = findItem(bid.getItemCode());
         if (response.getStatusCode().equals(HttpStatus.FOUND)) {
             bids.add(new Bid(bid.getItemCode(), bid.getAmount()));
         } else {
@@ -29,6 +28,13 @@ public class BidController {
         }
 
         return new ResponseEntity("Bid confirmed", HttpStatus.OK);
+    }
+
+    private ResponseEntity<ItemResponse> findItem(String code) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity(headers);
+        return restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.GET, entity, ItemResponse.class);
     }
 
 }

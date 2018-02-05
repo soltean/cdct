@@ -3,9 +3,9 @@ package contracts
 org.springframework.cloud.contract.spec.Contract.make {
     request {
         method 'GET'
-        url 'items'
+        url '/items'
         headers {
-            header('Content-Type': consumer(regex('application/*json*')))
+            header('Content-Type': consumer(regex('application/json')))
         }
     }
     response {

@@ -3,15 +3,15 @@ package contracts
 org.springframework.cloud.contract.spec.Contract.make {
     request {
         method 'GET'
-        url 'items/A'
+        url '/items/A'
         headers {
-            header('Content-Type': consumer(regex('application/*json*')))
+            header('Content-Type': consumer(regex('application/json')))
         }
     }
     response {
         status 302
         body(
-                    code    : value(producer(regex('[A-Za-z0-9]+'))),
+                    code    : 'A',
                     reservePrice   : value(producer(regex('[0-9]+')))
         )
         headers {

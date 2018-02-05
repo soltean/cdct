@@ -16,8 +16,8 @@
     </parent>
 
     <modules>
-        <module>bidservice</module>
         <module>itemservice</module>
+        <module>bidservice</module>
     </modules>
 
     <repositories>
