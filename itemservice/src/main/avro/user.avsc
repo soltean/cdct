@@ -1,0 +1,8 @@
+{"namespace": "com.so.cdct",
+ "type": "record",
+ "name": "ItemMessage",
+ "fields": [
+     {"name": "code", "type": "string"},
+     {"name": "reservePrice",  "type": ["int", "null"]}
+ ]
+}
