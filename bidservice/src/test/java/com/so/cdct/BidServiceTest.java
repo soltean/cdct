@@ -16,8 +16,8 @@ import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@AutoConfigureStubRunner(ids = {"com.so:item-service:+:stubs:8082"}, workOffline = true)
-public class BidServiceTest {
+//@AutoConfigureStubRunner(ids = {"com.so:item-service:+:stubs:8082"}, workOffline = true)
+public  class BidServiceTest {
 
     @Autowired
     private RestTemplate restTemplate;

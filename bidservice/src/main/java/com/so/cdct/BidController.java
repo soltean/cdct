@@ -1,12 +1,17 @@
 package com.so.cdct;
 
+import org.apache.avro.file.DataFileStream;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.specific.SpecificDatumReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,23 +23,32 @@ public class BidController {
 
     private List<Bid> bids = new ArrayList<>();
 
-    @PostMapping(value = "/bids")
-    public ResponseEntity sendBidForProduct(@RequestBody Bid bid) {
-        ResponseEntity<ItemResponse> response = findItem(bid.getItemCode());
-        if (response.getStatusCode().equals(HttpStatus.FOUND)) {
-            bids.add(new Bid(bid.getItemCode(), bid.getAmount()));
-        } else {
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    private final ItemMessage EMPTY = ItemMessage.newBuilder().setCode("").setReservePrice(0).build();
 
+    @PostMapping(value = "/bids")
+    public ResponseEntity sendBidForProduct(@RequestBody Bid bid) throws IOException {
+        ItemMessage response = findItem(bid.getItemCode());
+        if (response.equals(EMPTY)) {
+            return new ResponseEntity("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        bids.add(bid);
         return new ResponseEntity("Bid confirmed", HttpStatus.OK);
     }
 
-    private ResponseEntity<ItemResponse> findItem(String code) {
+    private ItemMessage findItem(String code) throws IOException {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity entity = new HttpEntity(headers);
-        return restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.GET, entity, ItemResponse.class);
-    }
+        ResponseEntity<ByteArrayResource> response = restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.POST, entity, ByteArrayResource.class);
 
+        if (response.getStatusCode().equals(HttpStatus.OK)) {
+            ByteArrayResource byteResource = response.getBody();
+            DatumReader<ItemMessage> datumReader = new SpecificDatumReader<>(ItemMessage.class);
+            DataFileStream<ItemMessage> streamReader = new DataFileStream<>(byteResource.getInputStream(), datumReader);
+            ItemMessage item = new ItemMessage();
+            if (streamReader.hasNext()) {
+                return streamReader.next(item);
+            }
+        }
+        return EMPTY;
+    }
 }
