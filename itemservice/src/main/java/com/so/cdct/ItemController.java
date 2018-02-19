@@ -43,8 +43,8 @@ public class ItemController {
         ItemMessage item = availableItems.stream().filter(it -> it.getCode().equals(code))
                 .findFirst().map(new ItemMessageMapper()).orElseGet(() -> EMPTY);
 
-        DatumWriter<ItemMessage> userDatumWriter = new SpecificDatumWriter<>(ItemMessage.class);
-        DataFileWriter<ItemMessage> dataFileWriter = new DataFileWriter<>(userDatumWriter);
+        DatumWriter<ItemMessage> datumWriter = new SpecificDatumWriter<>(ItemMessage.class);
+        DataFileWriter<ItemMessage> dataFileWriter = new DataFileWriter<>(datumWriter);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         dataFileWriter.create(item.getSchema(), outputStream);
         dataFileWriter.append(item);
