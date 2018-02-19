@@ -1,10 +1,10 @@
 package com.so.cdct;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,8 +16,8 @@ import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-//@AutoConfigureStubRunner(ids = {"com.so:item-service:+:stubs:8082"}, workOffline = true)
-public  class BidServiceTest {
+@Ignore("this test requires manual start of the Item Application")
+public class BidServiceTest {
 
     @Autowired
     private RestTemplate restTemplate;

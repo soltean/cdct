@@ -1,8 +1,11 @@
 package com.so.cdct;
 
+import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileStream;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumReader;
-import org.apache.avro.specific.SpecificDatumReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
@@ -22,12 +25,24 @@ public class BidController {
     private RestTemplate restTemplate;
 
     private List<Bid> bids = new ArrayList<>();
+    private GenericRecord EMPTY = null;
+    private Schema schema;
 
-    private final ItemMessage EMPTY = ItemMessage.newBuilder().setCode("").setReservePrice(0).build();
+    {
+        try {
+            schema = new Schema.Parser().parse(this.getClass().getResourceAsStream("/avro/item.avsc"));
+            EMPTY = new GenericData.Record(schema);
+            EMPTY.put("code", "");
+            EMPTY.put("reservePrice", 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            //log something useful
+        }
+    }
 
     @PostMapping(value = "/bids")
     public ResponseEntity sendBidForProduct(@RequestBody Bid bid) throws IOException {
-        ItemMessage response = findItem(bid.getItemCode());
+        GenericRecord response = findItem(bid.getItemCode());
         if (response.equals(EMPTY)) {
             return new ResponseEntity("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -35,16 +50,16 @@ public class BidController {
         return new ResponseEntity("Bid confirmed", HttpStatus.OK);
     }
 
-    private ItemMessage findItem(String code) throws IOException {
+    private GenericRecord findItem(String code) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<ByteArrayResource> response = restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.POST, entity, ByteArrayResource.class);
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             ByteArrayResource byteResource = response.getBody();
-            DatumReader<ItemMessage> datumReader = new SpecificDatumReader<>(ItemMessage.class);
-            DataFileStream<ItemMessage> streamReader = new DataFileStream<>(byteResource.getInputStream(), datumReader);
-            ItemMessage item = new ItemMessage();
+            DatumReader<GenericRecord> datumReader = new GenericDatumReader<>(schema);
+            DataFileStream<GenericRecord> streamReader = new DataFileStream<>(byteResource.getInputStream(), datumReader);
+            GenericRecord item = null;
             if (streamReader.hasNext()) {
                 return streamReader.next(item);
             }
