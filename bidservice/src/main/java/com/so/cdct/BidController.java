@@ -35,7 +35,6 @@ public class BidController {
             EMPTY.put("code", "");
             EMPTY.put("reservePrice", 0);
         } catch (IOException e) {
-            e.printStackTrace();
             //log something useful
         }
     }
@@ -53,7 +52,7 @@ public class BidController {
     private GenericRecord findItem(String code) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity entity = new HttpEntity(headers);
-        ResponseEntity<ByteArrayResource> response = restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.POST, entity, ByteArrayResource.class);
+        ResponseEntity<ByteArrayResource> response = restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.GET, entity, ByteArrayResource.class);
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             ByteArrayResource byteResource = response.getBody();

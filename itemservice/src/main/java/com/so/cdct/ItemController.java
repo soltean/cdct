@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +37,6 @@ public class ItemController {
             EMPTY.put("code", "");
             EMPTY.put("reservePrice", 0);
         } catch (IOException e) {
-            e.printStackTrace();
             //log something useful
         }
     }
@@ -50,7 +48,7 @@ public class ItemController {
         return new ResponseEntity(mappedList, HttpStatus.FOUND);
     }
 
-    @PostMapping(value = "/items/{code}")
+    @GetMapping(value = "/items/{code}")
     public ResponseEntity<byte[]> getItem(@PathVariable String code) throws IOException {
 
         GenericRecord item = availableItems.stream().filter(it -> it.getCode().equals(code))
