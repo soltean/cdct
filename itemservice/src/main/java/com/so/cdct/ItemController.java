@@ -54,8 +54,8 @@ public class ItemController {
         GenericRecord item = availableItems.stream().filter(it -> it.getCode().equals(code))
                 .findFirst().map(new ItemMessageMapper()).orElseGet(() -> EMPTY);
 
-        DatumWriter<GenericRecord> userDatumWriter = new GenericDatumWriter<>();
-        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(userDatumWriter);
+        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>();
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         dataFileWriter.create(item.getSchema(), outputStream);
         dataFileWriter.append(item);
