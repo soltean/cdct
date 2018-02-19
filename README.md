@@ -1,2 +1,2 @@
-# cdct
-Consumer Driver Contract Testing
+# avro 
+Serialization with no code generation
