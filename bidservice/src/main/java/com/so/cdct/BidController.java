@@ -38,7 +38,7 @@ public class BidController {
     private ItemMessage findItem(String code) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity entity = new HttpEntity(headers);
-        ResponseEntity<ByteArrayResource> response = restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.POST, entity, ByteArrayResource.class);
+        ResponseEntity<ByteArrayResource> response = restTemplate.exchange("http://localhost:8082/items/" + code, HttpMethod.GET, entity, ByteArrayResource.class);
 
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             ByteArrayResource byteResource = response.getBody();

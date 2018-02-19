@@ -37,7 +37,7 @@ public class ItemController {
         return new ResponseEntity(mappedList, HttpStatus.FOUND);
     }
 
-    @PostMapping(value = "/items/{code}")
+    @GetMapping(value = "/items/{code}")
     public ResponseEntity<byte[]> getItem(@PathVariable String code) throws IOException {
         ItemMessage EMPTY = ItemMessage.newBuilder().setCode("").setReservePrice(0).build();
         ItemMessage item = availableItems.stream().filter(it -> it.getCode().equals(code))
